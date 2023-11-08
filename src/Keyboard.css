@@ -1,0 +1,11 @@
+.keyboard {
+    flex: 1;
+    gap: 5px;
+    background: hsl(184, 100%, 86%);
+    padding: 20px;
+
+    display: grid;
+    grid-template-columns: repeat(var(--columns), 1fr);
+    grid-template-rows: repeat(var(--rows), 1fr);
+    box-sizing: border-box;
+}
