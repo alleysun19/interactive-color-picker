@@ -1,268 +1,277 @@
-import React, { Component } from 'react'
+// import React, { Component } from 'react'
+
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import Button from './Button'
-import buttonGroup from './buttonGroup'
+import ColorProperties from './ColorPropertyName'
 import './Keyboard.css'
+import './Button.css'
+import { Globals } from './ColorPicker.js'
 
-class Keyboard extends Component {
-
-    constructor() {
-        super()
-        this.state = {
-            buttonComponents: []
-            // buttonColorList: []
-        };
-
-        this.selectionType = "none"
-        this.columns = 7;
-        this.rows = 5;
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rubik+Moonrocks&family=Varela+Round&display=swap');
+</style>
 
 
-        // this.startingHue = 0;
-        this.hueIncrement = 50;
-        this.saturationIncrement = 100 / (this.columns + this.rows - 1);
-        this.lightIncrement = 100 / (this.columns + this.rows - 1);
+const Keyboard = ({ rows, columns, changeGlobalColor, hslMod, buttonLastPressed, showBorders, hoverShowColor }) => {
 
-        // this.incrementCount = 0;
-        // this.timeDelay = 0;
+    const { globalHue, globalSat, globalLight } = useContext(Globals);
 
-        // this.timeDelayMultiplier = 3;
-        this.buttonHueRange = 50;
-        this.buttonLightRange = 100 / 10;
-        this.buttonSaturationRange = 100 / 10;
+    const [buttonColors, setbuttonColors] = useState([]);
+    const [showSolidColors, setShowSolidColors] = useState(false);
+    const gradientRange = useRef(0);
 
-        this.changeColorInProcess = false;
-        this.buttonColorList = [];
-    }
+    const selectedButton = useRef(Math.floor(((rows * columns) - 1) / 2));
 
-    changeColors = (quePosition, toBeQueued) => {
+    // const [buttonLastPressed, setButtonLastPressed] = useState([]);
+    // const [deselectButton, sdeselectButton] = useState([]);
 
-        let hueIncrementCount = 0;
+    const numGradients = rows + columns - 1;
+    const colorWaveStart = Math.floor(numGradients / 2);
 
+    let deselectButton = false;
 
-        const incrementColor_SmoothTransition = () => {
+    const getGradientColors = (gradientStart, gradientEnd) => {
 
-            let push = true;
-            if (hueIncrementCount === 0) {
-                push = true;
-            }
-            if (hueIncrementCount === this.hueIncrement) {
-                push = false;
-            }
+        const hsl = { hue: globalHue, sat: globalSat, light: globalLight };
 
-            setTimeout(() => {
-                toBeQueued.forEach((buttonGroup) => {
-                    this.buttonColorList[buttonGroup].incrementHue();
-                    this.buttonColorList[buttonGroup].isPushed = push;
-
-                    this.buttonColorList[buttonGroup].buttonsWithSameColor.forEach(button => {
-                        this.state.buttonComponents[button] =
-                            <Button key={button}
-                                index={button}
-                                colors={[this.buttonColorList[buttonGroup].hue1, this.buttonColorList[buttonGroup].hue2, this.buttonColorList[buttonGroup].saturation1, this.buttonColorList[buttonGroup].saturation2, this.buttonColorList[buttonGroup].light1, this.buttonColorList[buttonGroup].light2]}
-                                colorWave={this.colorWave}
-                                isPushed={this.buttonColorList[buttonGroup].isPushed} />
-                    })
-                })
-                this.setState({ buttonComponents: this.state.buttonComponents });
-            }, ((quePosition * this.hueIncrement) + hueIncrementCount) * 2.2);
-            hueIncrementCount++;
-        }
-
-        while (hueIncrementCount <= this.hueIncrement) {
-
-            incrementColor_SmoothTransition();
-        }
-
-    }
-
-
-    colorWave = (button) => {
-
-        console.log(button);
-        const waveStartingIndex = this.buttonColorList.findIndex(buttonGroup => buttonGroup.buttonsWithSameColor.includes(button));
-
-        let quePositions = [];
-
-        for (let i = 0; i < this.buttonColorList.length; i++) {
-
-            let quePosition = Math.abs(waveStartingIndex - i);
-
-            let quePositionExists = quePositions.findIndex((element) => element.at(0) === quePosition);
-
-            if (quePositionExists !== -1) {
-                quePositions.at(quePositionExists).push(i);
-            }
-            else {
-                quePositions.push([quePosition, i]);
-            }
-
-        }
-        
-        quePositions = quePositions.toSorted();
-
-        quePositions.forEach(element => {
-            this.changeColors(element[0], element.slice(1));
-        });
-
-    };
-
-    componentDidMount() {
-
-        this.selectionType = this.props.selectionType;
-        this.rows = this.props.rows;
-        this.columns = this.props.columns;
-
-
-        let incrementColorProperty = 0;
-        let hue = 0;
-
-        let saturation = 0;
-
-        let light = 0;
-
-        if (this.selectionType ==="Light") {
-            console.log("meow");
-        }
-
-        let buttonColorList = [];
-
-        for (let i = 0; i < this.columns; i++) {
-            let buttonsWithSameColor = [];
-
-            buttonsWithSameColor.push(i);
-            for (let j = 1; j <= i && j < this.rows; j++) {
-                buttonsWithSameColor.push(i + ((this.columns - 1) * j));
-            }
-            let buttonColors = new buttonGroup(buttonsWithSameColor);
-
-            console.log("huh" + incrementColorProperty);
-            switch (this.selectionType) {
-                case "Hue":
-                    buttonColors.setHue(incrementColorProperty);
-                    incrementColorProperty += buttonColors.buttonHueRange;
-                break;
-                case "Light":
-                    buttonColors.setLight(incrementColorProperty);
-                    incrementColorProperty += buttonColors.buttonLightRange;
-                    if(incrementColorProperty > 100)
-                    {
-                        buttonColors.buttonLightRange *= -1;
-                    }
-                break ;
-                case "Saturation":
-                    buttonColors.setSaturation(incrementColorProperty);
-                    incrementColorProperty += buttonColors.buttonSaturationRange;
-                    if(incrementColorProperty > 100)
-                    {
-                        buttonColors.buttonSaturationRange *= -1;
-                    }
-                break;
-                default:
-                    break;
-            }
-            // incrementColorProperty += buttonColors.buttonHueRange;
-            // buttonColors.setHue(hue);
-            // buttonColors.setSaturation(saturation);
-            // buttonColors.setLight(light);
-            // hue += buttonColors.buttonHueRange;
-            buttonColorList.push(buttonColors);
-        }
-
-        console.log("HUH" + incrementColorProperty);
-        for (let i = 0, j = ((this.columns * 2) - 1); i < (this.rows - 1); i++, j += this.columns) {
-            let buttonsWithSameColor = [];
-
-            buttonsWithSameColor.push(j);
-            for (let c = 1; c < ((this.rows - 1) - i) && c < this.columns; c++) {
-                buttonsWithSameColor.push(j + ((this.columns - 1) * c));
-            }
-
-            let buttonColors = new buttonGroup(buttonsWithSameColor);
-            switch (this.selectionType) {
-                case "Hue":
-                    buttonColors.setHue(incrementColorProperty);
-                    incrementColorProperty += buttonColors.buttonHueRange;
-                break;
-                case "Light":
-                    buttonColors.setLight(incrementColorProperty);
-                    incrementColorProperty += buttonColors.buttonLightRange;
-                    if(incrementColorProperty >= 100)
-                    {
-                        buttonColors.buttonLightRange *= -1;
-                    }
-                break ;
-                case "Saturation":
-                    buttonColors.setSaturation(incrementColorProperty);
-                    incrementColorProperty += buttonColors.buttonSaturationRange;
-                    if(incrementColorProperty >= 100)
-                    {
-                        buttonColors.buttonSaturationRange *= -1;
-                    }
-                break;
-                default:
-                    break;
-            }
-            // incrementColorProperty += buttonColors.buttonHueRange;
-            // buttonColors.setHue(hue);
-            // buttonColors.setSaturation(saturation);
-            // buttonColors.setLight(light);
-            // hue += buttonColors.buttonHueRange;
-            buttonColorList.push(buttonColors);
-        }
-
-
-        let buttonColorListMiddle = buttonColorList.length / 2;
-        buttonColorList.map((buttonGroup, index) => buttonGroup.numStateChangesForAnimation = buttonColorListMiddle + (Math.abs(buttonColorListMiddle - index)));
-
-
-        const buttonComponents = [];
-        for (let i = 0; i < (this.rows * this.columns); i++) {
-            for (let buttonGroup of this.buttonColorList) {
-                if (buttonGroup.buttonsWithSameColor.includes(i)) {
-                    buttonComponents.push(
-                        <Button key={i}
-                            index={i}
-                            colors={[buttonGroup.hue1, buttonGroup.hue2, buttonGroup.saturation1, buttonGroup.saturation2, buttonGroup.light1, buttonGroup.light2]}
-                            colorWave={this.colorWave}
-                            isPushed={buttonGroup.isPushed} />
-                    );
+        switch (hslMod) {
+            case ColorProperties.Hue:
+                return {
+                    color1: { ...hsl, hue: gradientStart },
+                    color2: { ...hsl, hue: gradientEnd }
                 }
-            }
+            case ColorProperties.Saturation:
+                return {
+                    color1: { ...hsl, sat: gradientStart },
+                    color2: { ...hsl, sat: gradientEnd }
+                }
+            case ColorProperties.Light:
+                return {
+                    color1: { ...hsl, light: gradientStart },
+                    color2: { ...hsl, light: gradientEnd }
+                }
+            default:
+                break;
+        }
+    }
+
+    //initialization
+    useEffect(() => {
+
+        switch (hslMod) {
+            case ColorProperties.Hue:
+                gradientRange.current = Math.ceil(360 / (numGradients));
+
+                break;
+            case ColorProperties.Saturation:
+            case ColorProperties.Light:
+                gradientRange.current = Math.ceil(100 / (numGradients));
+                break;
+            default: break;
         }
 
-        this.buttonColorList = buttonColorList.map(obj => ({ ...obj }));
-        this.setState({ buttonComponents: buttonComponents.map(obj => ({ ...obj })) });
-        console.log(buttonComponents);
+        let gradientStart = 0;
+        let gradientEnd = gradientRange.current;
 
+        let colors = [];
 
-    }
-    render() {
+        for (let i = 0; i < columns; i++) {
+            let buttonsThisColor = [];
 
-        // const buttonComponents = [];
-        // for (let i = 0; i < (this.rows * this.columns); i++) {
-        //     for (let buttonGroup of this.buttonColorList) {
-        //         if (buttonGroup.buttonsWithSameColor.includes(i)) {
-        //             buttonComponents.push(
-        //                 <Button key={i}
-        //                     index={i}
-        //                     colors={[buttonGroup.hue1, buttonGroup.hue2, buttonGroup.saturation1, buttonGroup.saturation2, buttonGroup.light1, buttonGroup.light2]}
-        //                     colorWave={this.colorWave}
-        //                     isPushed={buttonGroup.isPushed} />
-        //             );
-        //         }
+            buttonsThisColor.push(i);
+
+            for (let j = 1; j <= i && j < rows; j++) {
+                buttonsThisColor.push(i + ((columns - 1) * j));
+            }
+
+            let coloredButtons = {
+                buttonsThisColor: buttonsThisColor,
+                gradient: { ...getGradientColors(gradientStart, gradientEnd) },
+                colorWavePosition: Math.abs(colorWaveStart - colors.length)
+            };
+
+            gradientStart += gradientRange.current;
+            gradientEnd += gradientRange.current;
+
+            colors.push(coloredButtons);
+        }
+
+        for (let i = 0, j = ((columns * 2) - 1); i < (rows - 1); i++, j += columns) {
+            let buttonsThisColor = [];
+
+            buttonsThisColor.push(j);
+            for (let c = 1; c < ((rows - 1) - i) && c < columns; c++) {
+                buttonsThisColor.push(j + ((columns - 1) * c));
+            }
+
+            let coloredButtons = {
+                buttonsThisColor: buttonsThisColor,
+                colorWavePosition: Math.abs(colorWaveStart - colors.length),
+                gradient: { ...getGradientColors(gradientStart, gradientEnd) },
+            };
+
+            gradientStart += gradientRange.current;
+            gradientEnd += gradientRange.current;
+
+            colors.push(coloredButtons);
+        }
+
+        // buttonColors = [array] of objects: 
+        // {
+        //     buttonsThisColor: [1, 2, 3],
+        //     colorWavePosition: 1,
+        //     gradient: {
+        //         color1: { hue: 100, sat: 100, light: 100 }
+        //         color2: { hue: 100, sat: 100, light: 100 }
         //     }
         // }
-        // this.setState({ buttonComponents: buttonComponents.map(obj => ({ ...obj })) });
 
-        return (
-            <React.Fragment>
-                <div className="keyboard"
-                    style={{ '--rows': this.rows, '--columns': this.columns }}>
-                    {this.state.buttonComponents}
-                </div>
-            </React.Fragment>
-        )
+        setbuttonColors(JSON.parse(JSON.stringify(colors)));
+
+    }, []);
+
+    useEffect(() => {
+        if (buttonColors.length === 0) {
+            return;
+        }
+
+        let changed = {};
+
+        if (hslMod === ColorProperties.Hue) {
+            changed = { sat: globalSat, light: globalLight };
+        }
+        else if (hslMod === ColorProperties.Saturation) {
+            changed = { hue: globalHue, light: globalLight };
+        }
+        else if (hslMod === ColorProperties.Light) {
+            changed = { hue: globalHue, sat: globalSat };
+        }
+
+        let colors = buttonColors.map(color => {
+            let newColor1 = { ...color.gradient.color1, ...changed };
+            let newColor2 = { ...color.gradient.color2, ...changed };
+
+            return { ...color, gradient: { color1: { ...newColor1 }, color2: { ...newColor2 } } };
+        });
+
+        setbuttonColors(JSON.parse(JSON.stringify(colors)));
+
+    }, [globalHue, globalSat, globalLight]);
+
+    // let buttonPushDelay = 0;
+    let btns = [];
+
+    buttonColors.map(color => {
+        let gradient = color.gradient;
+        // let delay = (color.colorWavePosition * 100);
+        let delay = (150 * (color.colorWavePosition));
+        // buttonPushDelay += 150;
+
+        return (color.buttonsThisColor.map(button => {
+            // let key = `button: ${button} globalColors: [${globalHue}, ${globalSat}, ${globalLight}]`;
+            btns.push(
+                <Button key={button}
+                    button={button}
+                    hslMod={hslMod}
+                    changeColor={changeGlobalColor}
+                    animationDelay={delay}
+                    gradient={gradient}
+                    hoverShowColor={hoverShowColor} 
+                    showBorders={showBorders}
+                    />); 
+        }));
+    });
+
+    let btnsFragment = [];
+    let fragmentStart = 0;
+
+    buttonColors.map(color => {
+        if (color.buttonsThisColor.includes(buttonLastPressed)) {
+            if (hslMod === ColorProperties.Hue) {
+                fragmentStart = color.gradient.color1.hue;
+            }
+            else if (hslMod === ColorProperties.Saturation) {
+                fragmentStart = color.gradient.color1.sat;
+                console.log(buttonLastPressed);
+            }
+            else if (hslMod === ColorProperties.Light) {
+                fragmentStart = color.gradient.color1.light;
+            }
+        }
+
+    });
+
+    let fragment_columns = 6;
+    if (hslMod === ColorProperties.Hue) {
+        fragment_columns = 5;
     }
+
+    for (let i = fragmentStart; i < (fragmentStart + gradientRange.current); i++) {
+        let grad = {};
+        if (hslMod === ColorProperties.Hue) {
+            grad = {
+                color1: { hue: i, sat: globalSat, light: globalLight },
+                color2: { hue: i, sat: globalSat, light: globalLight }
+            }
+        }
+        else if (hslMod === ColorProperties.Saturation) {
+            grad = {
+                color1: { hue: globalHue, sat: i, light: globalLight },
+                color2: { hue: globalHue, sat: i, light: globalLight }
+            }
+        }
+        else if (hslMod === ColorProperties.Light) {
+            grad = {
+                color1: { hue: globalHue, sat: globalSat, light: i },
+                color2: { hue: globalHue, sat: globalSat, light: i }
+            }
+        }
+        btnsFragment.push(
+            <Button key={i}
+                button={i}
+                hslMod={hslMod}
+                changeColor={changeGlobalColor}
+                fragment={true}
+                // animationDelay={delay}
+                gradient={grad}
+                hoverShowColor={hoverShowColor}
+                showBorders={showBorders} />);
+    }
+
+    const toggleSolidColors = () => {
+        setShowSolidColors((showSolidColors) => !showSolidColors);
+    }
+
+    let gradientColors = <div className='keyboard'> {btns} </div>;
+
+    let solidColors = '';
+    let showMore = showSolidColors ? "Close" : "Show Gradient Colors";
+
+    if (showSolidColors) {
+        solidColors = <div className='keyboard fragment'
+            style={{
+                '--fragment-col': fragment_columns,
+            }}> {btnsFragment} </div>;
+    }
+
+    let btnShow =
+        <button className='btn btn-layers'
+            style={{
+                position: 'unset',
+                padding: '5px',
+                '--contrastColor': `hsl(${globalHue},${globalSat}%,${Math.abs(globalLight - 25)}%)`,
+                background: `hsl(${globalHue},50%,75%)`,
+            }}
+            onClick={toggleSolidColors}>{showMore}</button>
+
+
+    return (
+        <div className='hsl-modifier'>
+            {gradientColors}
+            {btnShow}
+            {solidColors}
+        </div>
+    );
 }
 
 export default Keyboard;

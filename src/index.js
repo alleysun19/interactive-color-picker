@@ -1,19 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import Keyboard from './Keyboard';
+import { ColorPicker } from './ColorPicker';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <div className={`color-picker`}>
-      <Keyboard key={1} selectionType={"Hue"} rows={5} columns={5} />
-      <Keyboard key={2} selectionType={"Light"} rows={5} columns={5} />
-      <Keyboard key={3} selectionType={"Saturation"} rows={5} columns={5} />
-    </div>
-
-  </React.StrictMode>
+  // <React.StrictMode>
+    <ColorPicker />
+  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

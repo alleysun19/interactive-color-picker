@@ -1,71 +1,82 @@
-
-.btn {
-    /* flex */
-    flex: 1;
-
-    /*font*/
-    font-family: "Lato", sans-serif;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 1.7;
-    color: #777;
-
-    /*display*/
-    display: inline-block;
-
-    /* padding */
-    /* padding: 15px 40px; */
-
-    /* text */
-    text-transform: uppercase;
-    text-decoration: none;
-    color: #777;
-
-    /* default bg color of white */
-    background: #fff;
-
-    /* border */
-    border-radius: 10px;
-    border: solid 1px rgb(27, 10, 182);
-
-    /* box-shadow */
-    box-shadow: 6px 6px 0 6px rgb(27, 10, 182);
-
+.btn-layers {
     /* position */
     position: relative;
 
-    /* transitions */
-    transition: all 250ms;
+    transition-duration: 250ms;
+
+    /* min-height: 40px; */
+
+    animation-name: move;
+    animation-duration: 750ms;
+    min-height: 35px;
+    max-height: 60p;
+
+    /* margin: 3px; */
+
 }
 
-.btn-3d { 
-    flex: 1;
+.btn {
+    font-family: 'Varela Round', sans-serif;
+    bottom: 0;
+    content: ””;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    color: rgb(87, 79, 81);
+    /* max-height: 100px; */
+
     border-radius: 10px;
-    background: hsl(184, 75%, 80%);
-    box-shadow: 6px 6px 0 6px rgb(27, 10, 182);
-    border: solid 1px rgb(27, 10, 182);
-    /* animation-name: changeColor;
-    animation-duration: 500ms;
-    animation-timing-function: ease-out;
-    animation-fill-mode: forwards; */
-    /* animation-iteration-count: infinite; */
+    /* transform: translateX(5px) translateY(5px); */
+    box-shadow: 4px 4px 0 4px black;
+
+    box-shadow: 4px 4px 0 4px var(--contrastColor);
+    border: solid 2px var(--contrastColor);
+    transition-duration: 250ms;
 }
 
-.btn:hover {
-    transform: translateX(5px) translateY(5px);
-    box-shadow: 4px 4px 0 4px rgb(27, 10, 182);
-    border: solid 2px rgb(27, 10, 182);
+
+.btn-animate {
+    animation-name: changeColor;
+    animation-duration: 750ms;
+    animation-fill-mode: both;
+
 }
 
-.btn:active {
-    transform: translateX(12px) translateY(12px);
-    border: solid 3px rgb(27, 10, 182);
+@keyframes changeColor {
+
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes move {
+
+    50% {
+        transform: translateX(-10px) translateY(-10px);
+    }
+}
+
+
+.btn-layers:hover {
+    transform: translateX(-2px) translateY(-2px);
+}
+
+
+.btn-layers:active {
+    transform: translate(7px) translateY(7px);
     box-shadow: none;
+
 }
 
+.btn-layers:active .btn  {
+   box-shadow: none;
+}
 
-.radial {
-    background-image: linear-gradient(to bottom right, var(--colr1), var(--color2));
-    color: hsl(135, 46%, 62%);
-    color: hsl(204, 46%, 62%);
+.btn-lg {
+    padding: 10px 25px;
 }
