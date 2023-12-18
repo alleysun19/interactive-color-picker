@@ -1,0 +1,49 @@
+.color-creator {
+  height: 100vh;
+
+
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  background: hsl(184, 100%, 86%);
+  /* flex-direction: column; */
+}
+
+.chosen-color {
+  flex: 3;
+  min-width: 100%;
+  min-height: 70px;
+  background-color: hsl(var(--hue), var(--sat), var(--light));
+  color: hsl(var(--hue), var(--sat), var(--light));
+
+  font-family: 'Courgette', sans-serif;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(60px, 10vh, 100px);
+}
+
+.chosen-color:hover {
+  color: hsla(var(--hue), var(--sat), var(--text-light), 25%);
+}
+
+.footer {
+  flex: 1 0 100%;
+  /* align-self: self-end; */
+  height: 30px;
+
+
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  box-sizing: border-box;
+  font-family: 'Dhurjati', sans-serif;
+}
+
+/* .hoverShowColor {
+  border: 
+} */
