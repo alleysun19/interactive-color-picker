@@ -70,7 +70,6 @@ const Button = ({
 
     let borderColor = '';
     if (showBorders) {
-        console.log("meow");
         borderColor = `hsl(${hue1},${sat1}%,${contrast}%)`
     }
 

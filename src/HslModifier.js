@@ -3,16 +3,16 @@
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import Button from './Button'
 import ColorProperties from './ColorPropertyName'
-import './Keyboard.css'
+import './HslModifier.css'
 import './Button.css'
 import { Globals } from './ColorPicker.js'
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Rubik+Moonrocks&family=Varela+Round&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Rubik+Moonrocks&family=Varela+Round&display=swap');
 </style>
 
 
-const Keyboard = ({ rows, columns, changeGlobalColor, hslMod, buttonLastPressed, showBorders, hoverShowColor }) => {
+const HslModifier = ({ rows, columns, changeGlobalColor, hslMod, buttonLastPressed, showBorders, hoverShowColor }) => {
 
     const { globalHue, globalSat, globalLight } = useContext(Globals);
 
@@ -176,9 +176,9 @@ const Keyboard = ({ rows, columns, changeGlobalColor, hslMod, buttonLastPressed,
                     changeColor={changeGlobalColor}
                     animationDelay={delay}
                     gradient={gradient}
-                    hoverShowColor={hoverShowColor} 
+                    hoverShowColor={hoverShowColor}
                     showBorders={showBorders}
-                    />); 
+                />);
         }));
     });
 
@@ -201,9 +201,9 @@ const Keyboard = ({ rows, columns, changeGlobalColor, hslMod, buttonLastPressed,
 
     });
 
-    let fragment_columns = 6;
+    let solidColumns = 6;
     if (hslMod === ColorProperties.Hue) {
-        fragment_columns = 5;
+        solidColumns = 5;
     }
 
     for (let i = fragmentStart; i < (fragmentStart + gradientRange.current); i++) {
@@ -242,19 +242,30 @@ const Keyboard = ({ rows, columns, changeGlobalColor, hslMod, buttonLastPressed,
         setShowSolidColors((showSolidColors) => !showSolidColors);
     }
 
-    let gradientColors = <div className='keyboard'> {btns} </div>;
-
     let solidColors = '';
+    let maxHeightGradient = '400px';
+    let maxHeightSolid = '100px'
     let showMore = showSolidColors ? "Close" : "Show Gradient Colors";
 
     if (showSolidColors) {
-        solidColors = <div className='keyboard fragment'
+        let maxHeight = {};
+        if (hslMod === ColorProperties.Hue)
+        {
+            maxHeightSolid = '250px';
+            maxHeightGradient = '200px';
+        }
+
+        solidColors = <div className='hsl-buttons solid-buttons'
             style={{
-                '--fragment-col': fragment_columns,
+                '--solid-col': solidColumns,
+                'maxHeight': maxHeightSolid
             }}> {btnsFragment} </div>;
+            // maxHeightContainer = `300px`
     }
 
-    let btnShow =
+    let gradientColors = <div className='hsl-buttons gradient-buttons' style={{'maxHeight': maxHeightGradient}}> {btns} </div>;
+
+    let btnShowSolid =
         <button className='btn btn-layers'
             style={{
                 position: 'unset',
@@ -268,10 +279,10 @@ const Keyboard = ({ rows, columns, changeGlobalColor, hslMod, buttonLastPressed,
     return (
         <div className='hsl-modifier'>
             {gradientColors}
-            {btnShow}
+            {btnShowSolid}
             {solidColors}
         </div>
     );
 }
 
-export default Keyboard;
+export default HslModifier;

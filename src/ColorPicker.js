@@ -1,7 +1,7 @@
 
 
 import { useState, createContext, useRef } from 'react';
-import Keyboard from './Keyboard';
+import HslModifier from './HslModifier';
 // import Color from './Color';
 import ColorProperties from './ColorPropertyName'
 import './ColorPicker.css'
@@ -56,16 +56,16 @@ const ColorPicker = () => {
     const btnBorderBg = `hsl(${Math.abs(globalHue - 50)}, ${globalSat}%, ${globalLight}%)`;
 
     let btnTxt = 0;
-    if (globalLight<20) {
+    if (globalLight < 20) {
         btnTxt = 75;
     }
-    else if (globalLight<40) {
+    else if (globalLight < 40) {
         btnTxt = 70;
     }
-    else if (globalLight<60) {
+    else if (globalLight < 60) {
         btnTxt = 90;
     }
-    else if (globalLight<80) {
+    else if (globalLight < 80) {
         btnTxt = 10;
     }
     // else if (globalLight<) {
@@ -82,49 +82,49 @@ const ColorPicker = () => {
     }
 
     return (
-
         <Globals.Provider value={{ globalHue, globalSat, globalLight }}>
-            <div className='color-creator'>
-                <div className='chosen-color' style={
+            <div className='color-picker'>
+                <div className='color-picked' style={
                     {
                         '--hue': globalHue,
                         '--sat': globalSat + '%',
                         '--light': globalLight + '%',
                         '--text-light': Math.abs(globalLight - 50) + '%',
                     }} >{color}</div>
-                <Keyboard key={1}
-                    rows={rows}
-                    columns={columns}
-                    changeGlobalColor={changeHue}
-                    hslMod={ColorProperties.Hue}
-                    buttonLastPressed={buttonLastPressed.current.hue}
-                    hoverShowColor={hoverShowColor}
-                    showBorders={showBorders}
-                />
+                <div className='color-modifiers'>
+                    <HslModifier key={1}
+                        rows={rows}
+                        columns={columns}
+                        changeGlobalColor={changeHue}
+                        hslMod={ColorProperties.Hue}
+                        buttonLastPressed={buttonLastPressed.current.hue}
+                        hoverShowColor={hoverShowColor}
+                        showBorders={showBorders}
+                    />
 
-                <Keyboard key={3}
-                    rows={rows}
-                    columns={columns}
-                    changeGlobalColor={changeSat}
-                    hslMod={ColorProperties.Saturation}
-                    buttonLastPressed={buttonLastPressed.current.sat}
-                    hoverShowColor={hoverShowColor}
-                    showBorders={showBorders}
-                />
+                    <HslModifier key={3}
+                        rows={rows}
+                        columns={columns}
+                        changeGlobalColor={changeSat}
+                        hslMod={ColorProperties.Saturation}
+                        buttonLastPressed={buttonLastPressed.current.sat}
+                        hoverShowColor={hoverShowColor}
+                        showBorders={showBorders}
+                    />
 
-                <Keyboard key={2}
-                    rows={rows}
-                    columns={columns}
-                    changeGlobalColor={changeLight}
-                    hslMod={ColorProperties.Light}
-                    buttonLastPressed={buttonLastPressed.current.light}
-                    hoverShowColor={hoverShowColor}
-                    showBorders={showBorders}
+                    <HslModifier key={2}
+                        rows={rows}
+                        columns={columns}
+                        changeGlobalColor={changeLight}
+                        hslMod={ColorProperties.Light}
+                        buttonLastPressed={buttonLastPressed.current.light}
+                        hoverShowColor={hoverShowColor}
+                        showBorders={showBorders}
 
-                />
-
-                <div className='footer'>
-                    <div>{hoverColor}</div>
+                    />
+                </div>
+                <div className='color-picker-footer'>
+                    <div style={{ height: `2em` }}>{hoverColor}</div>
                     <button className='btn btn-lg btn-layers' style={
                         {
                             position: 'unset',
@@ -134,10 +134,7 @@ const ColorPicker = () => {
                         onClick={setBorders}
                     >Show Borders</button>
                 </div>
-
-
             </div>
-
         </Globals.Provider>
 
     )

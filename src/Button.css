@@ -1,18 +1,20 @@
+* {
+    box-sizing: border-box;
+  }
+
+
+
 .btn-layers {
     /* position */
     position: relative;
 
     transition-duration: 250ms;
 
-    /* min-height: 40px; */
-
     animation-name: move;
     animation-duration: 750ms;
-    min-height: 35px;
-    max-height: 60p;
-
-    /* margin: 3px; */
-
+/* 
+    min-width: 35px;
+    min-height: 35px; */
 }
 
 .btn {

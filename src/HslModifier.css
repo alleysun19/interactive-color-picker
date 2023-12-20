@@ -1,0 +1,34 @@
+.hsl-modifier {
+    /* min-height: 600px;
+    max-height: 800px; */
+
+    /* min width before wrap */
+    flex: 1 0 350px;
+
+    display: flex;
+    flex-direction: column;
+
+    /* height: 90%; */
+
+    /* max-width: 50%; */
+
+    gap: 15px;
+    padding: 15px;
+}
+
+
+.hsl-buttons {
+    flex: 1 0 350px;
+    max-height: 400px;
+
+    display: grid;
+}
+.gradient-buttons {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 5px;
+}
+
+.solid-buttons {
+    grid-template-columns: repeat(var(--solid-col), 1fr);
+    gap: 2px;
+}
