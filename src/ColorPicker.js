@@ -46,9 +46,13 @@ const ColorPicker = () => {
         setLight(light);
     };
 
-    const hoverShowColor = (color) => {
-        console.log("enter");
-        setHoverColor(color);
+    const hoverShowColor = (color1, color2 = undefined) => {
+        if (color2 !== undefined) {
+            setHoverColor(`${color1}, ${color2}`);
+        }
+        else {
+            setHoverColor(color1);
+        }
     }
 
     const color = `hsl(${globalHue},${globalSat}%,${globalLight}%)`

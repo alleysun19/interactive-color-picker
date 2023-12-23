@@ -11,10 +11,6 @@ const Button = ({
 
     const background = useRef(``);
 
-    // const lightContrast = useRef();
-
-    // let buttonPressed = false;
-
     const copyColor = (e) => {
         e.preventDefault();
         console.log(`copy: (${hue1}, ${sat1}, ${light1})`);
@@ -50,16 +46,20 @@ const Button = ({
 
     }
 
-    // useEffect(() => {
-    //     let ele = document.getElementById('no_right_click');
-    //     ele.addEventListener('contextmenu', (ev)=>{
-    //       console.log("Right click disabled");
-    //       ev.preventDefault(); // this will prevent browser default behavior 
-    //     });
-    // }, []);
+    const onHover = () => {
+        if (!fragment) {
+            hoverShowColor(`hsl(${hue1},${sat1}%,${light1}%)`, `hsl(${hue2},${sat2}%,${light2}%)`);
+        }
+        else {
+            hoverShowColor(`hsl(${hue1},${sat1}%,${light1}%)`);
+        }
+    }
+
+    const clearHover = () => {
+            hoverShowColor(``);
+    }
 
     background.prev = background.current;
-
 
     background.current =
         `linear-gradient(to bottom right, ` +
@@ -73,21 +73,6 @@ const Button = ({
         borderColor = `hsl(${hue1},${sat1}%,${contrast}%)`
     }
 
-    // if (hslMod === ColorProperties.Light) {
-    //     contrast = Math.abs(gradientAvg - 50);
-    // }
-
-    const onHover = () => {
-        // if (fragment) {
-            hoverShowColor(`hsl(${hue1},${sat1}%,${light1}%)`);
-        // }
-    }
-
-    const clearHover = () => {
-        // if (fragment) {
-            hoverShowColor(``);
-        // }
-    }
     return (
         <div className='btn-layers'
             key={JSON.stringify(background.current)}
