@@ -57,29 +57,25 @@ const ColorPicker = () => {
 
     const color = `hsl(${globalHue},${globalSat}%,${globalLight}%)`
 
-    const btnBorderBg = `hsl(${Math.abs(globalHue - 50)}, ${globalSat}%, ${globalLight}%)`;
+    // "Show / Hide Borders" button display setup
+    const showBordersBg = `hsl(${Math.abs(globalHue - 50)}, ${globalSat}%, ${globalLight}%)`;
+    let showBordersText = showBorders ? 'Hide Borders' : 'Show Borders';
 
-    let btnTxt = 0;
+    let showBordersTextContrast= 0;
     if (globalLight < 20) {
-        btnTxt = 75;
+        showBordersTextContrast = 75;
     }
     else if (globalLight < 40) {
-        btnTxt = 70;
+        showBordersTextContrast = 70;
     }
     else if (globalLight < 60) {
-        btnTxt = 90;
+        showBordersTextContrast = 90;
     }
     else if (globalLight < 80) {
-        btnTxt = 10;
+        showBordersTextContrast = 10;
     }
-    // else if (globalLight<) {
-    //     btnTxt = 0;
-    // }
-    // else if (globalLight<75) {
-    //     btnTxt = 0;
-    // }
 
-    const btnBorderText = `hsl(${Math.abs(globalHue)}, ${globalSat}%, ${btnTxt}%)`
+    const showBordersTextColor = `hsl(${Math.abs(globalHue)}, ${globalSat}%, ${showBordersTextContrast}%)`
 
     const setBorders = () => {
         setShowBorders((showBorders) => !showBorders);
@@ -132,11 +128,11 @@ const ColorPicker = () => {
                     <button className='btn btn-lg btn-layers' style={
                         {
                             position: 'unset',
-                            backgroundColor: btnBorderBg,
-                            color: btnBorderText
+                            backgroundColor: showBordersBg,
+                            color: showBordersTextColor
                         }}
                         onClick={setBorders}
-                    >Show Borders</button>
+                    >{showBordersText}</button>
                 </div>
             </div>
         </Globals.Provider>
